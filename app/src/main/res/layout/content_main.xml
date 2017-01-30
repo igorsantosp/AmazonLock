@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.igor.amazonlock.MainActivity"
+    tools:showIn="@layout/activity_main"
+    tools:background="@drawable/amazonbackground1"
+    style="?android:attr/buttonBarStyle"
+    android:background="@drawable/amazonbackground1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp">
+
+            <Button
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn1"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:padding="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="65dp"
+                android:width="2dp"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:layout_marginTop="55dp"
+                android:layout_marginLeft="145dp"
+                android:layout_marginRight="135dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn2"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:padding="1dp"
+                android:layout_marginLeft="105dp"
+                android:layout_marginRight="175dp"
+                android:layout_column="0"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp"
+                android:layout_marginBottom="5dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn3"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:paddingBottom="65dp"
+                android:paddingLeft="65dp"
+                android:layout_column="2"
+                android:paddingEnd="1dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:padding="1dp"
+                android:layout_marginLeft="-262dp"
+                android:layout_marginRight="240dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn4"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:layout_gravity="center_horizontal"
+                android:layout_column="0"
+                android:padding="1dp"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:layout_marginLeft="-69dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn5"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:layout_column="1"
+                android:layout_marginLeft="-53dp"
+                android:layout_marginRight="98dp"
+                android:layout_marginTop="-2dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:paddingBottom="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:paddingLeft="65dp"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp"
+                android:padding="1dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn6"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="265dp"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:padding="1dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn7"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:padding="1dp"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:layout_marginLeft="-70dp"
+                android:layout_marginRight="115dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn8"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:layout_marginRight="199dp"
+                android:layout_marginLeft="82dp"
+                android:padding="1dp"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp"
+                android:layout_marginTop="-4dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn9"
+                android:background="@drawable/buttontoucheffect"
+                android:padding="1dp"
+                android:paddingBottom="65dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:layout_marginRight="175dp"
+                android:layout_marginLeft="-132dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp"
+                android:layout_marginTop="-4dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="39dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn0"
+                android:minHeight="35dp"
+                android:minWidth="35dp"
+                android:background="@drawable/buttontoucheffect"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:paddingBottom="65dp"
+                android:paddingRight="65dp"
+                android:paddingTop="65dp"
+                android:paddingLeft="65dp"
+                android:maxWidth="35dp"
+                android:maxHeight="35dp"
+                android:padding="1dp" />
+        </TableRow>
+    </TableLayout>
+
+
