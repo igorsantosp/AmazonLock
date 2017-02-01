@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:background="?attr/colorPrimary"
+            android:background="@android:color/holo_green_light"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -31,7 +31,7 @@
         android:clickable="true"
         app:fabSize="mini"
         app:srcCompat="@android:drawable/stat_sys_data_bluetooth"
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/bluetoothBtn"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="top|left"
         android:layout_gravity="bottom|right"
@@ -44,7 +44,7 @@
         android:clickable="true"
         app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_input_delete"
-        android:id="@+id/floatingActionButton2"
+        android:id="@+id/deleteButton"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|left"
         android:layout_gravity="top|right"
@@ -52,7 +52,7 @@
         android:layout_margin="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|left"
@@ -67,10 +67,11 @@
         android:text="Password:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
+        android:id="@+id/passTextView"
         android:textColor="@android:color/holo_orange_light"
         android:textSize="18sp"
         android:layout_marginTop="140dp"
-        android:layout_marginLeft="150dp" />
+        android:gravity="center_horizontal"
+        android:layout_gravity="top|center_horizontal" />
 
 </android.support.design.widget.CoordinatorLayout>
