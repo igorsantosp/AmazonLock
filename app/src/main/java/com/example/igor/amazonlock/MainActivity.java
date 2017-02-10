@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     boolean connect = false;
     private static String MAC = null;
     private boolean pressed;
-    private String senha;
+    private String senha="";
     UUID meuUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,7 +319,12 @@ public class MainActivity extends AppCompatActivity {
                 if (connect) {
                     //disconnect
                     try {
-                   outputStream.write("o".getBytes());
+                        for(int i=0;i<senha.length();i++){
+                            char temp = senha.charAt(i);
+                            String temp1= String.valueOf(temp);
+                            outputStream.write(temp1.getBytes());
+                        }
+                        Toast.makeText(getApplicationContext(), senha, Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -334,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         if(passText.getText().charAt(passText.getText().length()-1)=='*'){
                           passText.setText(passText.getText().subSequence(0,passText.getText().length() - 1));
+                            senha=senha.subSequence(0,senha.length() - 1).toString();
                         }
                         break;
                  /*   case MotionEvent.ACTION_UP:
