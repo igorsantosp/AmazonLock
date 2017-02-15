@@ -324,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
                             String temp1= String.valueOf(temp);
                             outputStream.write(temp1.getBytes());
                         }
+                        outputStream.write("p".getBytes());
                         Toast.makeText(getApplicationContext(), senha, Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
                         e.printStackTrace();
