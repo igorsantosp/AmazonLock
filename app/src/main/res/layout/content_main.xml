@@ -11,8 +11,8 @@
     tools:context="com.example.igor.amazonlock.MainActivity"
     tools:showIn="@layout/activity_main"
     tools:background="@drawable/amazonbackground1"
-    style="?android:attr/buttonBarStyle"
-    android:background="@drawable/amazonbackground1">
+    android:background="@drawable/amazonbackground1"
+    app:layout_collapseMode="pin">
 
         <TableRow
             android:layout_width="match_parent"

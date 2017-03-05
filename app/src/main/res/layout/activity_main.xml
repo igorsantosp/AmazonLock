@@ -74,4 +74,17 @@
         android:gravity="center_horizontal"
         android:layout_gravity="top|center_horizontal" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+        android:id="@+id/closeBtn"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="top|right"
+        android:layout_gravity="bottom|left"
+        android:layout_marginRight="16dp"
+        app:backgroundTint="@android:color/holo_red_dark" />
+
 </android.support.design.widget.CoordinatorLayout>

@@ -6,8 +6,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +31,9 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Locale;
 import java.util.UUID;
 
 import static com.example.igor.amazonlock.R.drawable.amazon;
@@ -45,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
     Button btn9;
     Button btn0;
     private OutputStream outputStream;
+    InputStream mmInputStream;
     FloatingActionButton deletebtn;
     FloatingActionButton sendBtn;
     FloatingActionButton bluetoothBtn;
+    FloatingActionButton closeBtn;
     TextView passText;
     final BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
     BluetoothDevice device = null;
@@ -58,7 +66,14 @@ public class MainActivity extends AppCompatActivity {
     private static String MAC = null;
     private boolean pressed;
     private String senha="";
+    public String data;
     UUID meuUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+    Thread workerThread;
+    volatile boolean stopWorker;
+    byte[] readBuffer;
+    int readBufferPosition;
+    TextToSpeech tts;
+    int result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         deletebtn= (FloatingActionButton) findViewById(R.id.deleteButton);
         bluetoothBtn= (FloatingActionButton) findViewById(R.id.bluetoothBtn);
         sendBtn= (FloatingActionButton) findViewById(R.id.sendButton);
+        closeBtn =(FloatingActionButton) findViewById(R.id.closeBtn);
         passText= (TextView) findViewById(R.id.passTextView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -316,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //sendBtn.setBackgroundColor(Color.parseColor("ff99cc00"));
                 if (connect) {
                     //disconnect
                     try {
@@ -325,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                             outputStream.write(temp1.getBytes());
                         }
                         outputStream.write("p".getBytes());
-                        Toast.makeText(getApplicationContext(), senha, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), senha, Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -333,6 +350,24 @@ public class MainActivity extends AppCompatActivity {
 
 
                 );
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //sendBtn.setBackgroundColor(Color.parseColor("ff99cc00"));
+                if (connect) {
+                    //disconnect
+                    try {
+                        outputStream.write("c".getBytes());
+                        Toast.makeText(getApplicationContext(), "enviando 'c'", Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }}}
+
+
+        );
+
         deletebtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -354,6 +389,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tts= new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if(i== TextToSpeech.SUCCESS){
+                    result = tts.setLanguage(Locale.getDefault());
+                }else{
+                    Toast.makeText(MainActivity.this,"Seu dispositivo não suporta a fala",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         btn0.getBackground().setAlpha(0);
         btn1.getBackground().setAlpha(0);
         btn2.getBackground().setAlpha(0);
@@ -366,6 +412,19 @@ public class MainActivity extends AppCompatActivity {
         btn9.getBackground().setAlpha(0);
 
     }
+       /* public Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                        data = (String) msg.obj;
+                        passText.setText("Message : " + data);
+
+
+            }
+
+        };*/
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -425,9 +484,15 @@ public class MainActivity extends AppCompatActivity {
                     //  Toast.makeText(getApplicationContext(),"MAC: "+MAC,Toast.LENGTH_LONG).show();
                     device = bluetooth.getRemoteDevice(MAC);
                     try {
+                        if(socket!=null){
+                            closeBT();
+                        }
                         socket = device.createRfcommSocketToServiceRecord(meuUUID);
                         socket.connect();
                         outputStream = socket.getOutputStream();
+                        mmInputStream = socket.getInputStream();
+                        beginListenForData();
+                        //InputStream input = socket.getInputStream();
                         Toast.makeText(getApplicationContext(), "Conectado com: " + MAC, Toast.LENGTH_LONG).show();
                         connect = true;
                     } catch (IOException e) {
@@ -439,5 +504,112 @@ public class MainActivity extends AppCompatActivity {
                 }
         }
     }
+    void beginListenForData()
+    {
+        final Handler handler = new Handler();
+        final byte delimiter = 10; //This is the ASCII code for a newline character
 
+        stopWorker = false;
+        readBufferPosition = 0;
+        readBuffer = new byte[1024];
+        workerThread = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while(!Thread.currentThread().isInterrupted() && !stopWorker)
+                {
+                    try
+                    {
+                        int bytesAvailable = mmInputStream.available();
+                        if(bytesAvailable > 0)
+                        {
+                            byte[] packetBytes = new byte[bytesAvailable];
+                            mmInputStream.read(packetBytes);
+                            for(int i=0;i<bytesAvailable;i++)
+                            {
+                                byte b = packetBytes[i];
+                                if(b == delimiter)
+                                {
+                                    byte[] encodedBytes = new byte[readBufferPosition];
+                                    System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
+                                    final String data = new String(encodedBytes, "US-ASCII");
+                                    readBufferPosition = 0;
+
+                                    handler.post(new Runnable()
+                                    {
+                                        public void run()
+                                        {
+                                           Toast.makeText(getApplicationContext(), "Data recebida:"+data, Toast.LENGTH_LONG).show();
+
+                    //                        Toast.makeText(getApplicationContext(), "Dado recebido"+data, Toast.LENGTH_LONG).show();
+                                            if(data.charAt(0)=='s'){
+                                                Toast.makeText(getApplicationContext(), "Você entrou em modo super usuário, digite a nova senha", Toast.LENGTH_LONG).show();
+                                                falar("Você entrou em modo super usuário");
+                                            }else{
+                                                if(data.charAt(0)=='n'){
+                                                    Toast.makeText(getApplicationContext(), "Modo comum, digite a senha para abrir", Toast.LENGTH_LONG).show();
+                                                    falar("Digite a senha para abrir a porta");
+                                                }else{
+                                                    if(data.charAt(0)=='e'){
+                                                        Toast.makeText(getApplicationContext(), "SENHA ERRADA", Toast.LENGTH_LONG).show();
+                                                        falar("Senha errada");
+                                                        //sendBtn.setBackgroundColor(Color.parseColor("ffcc0000"));
+                                                    }
+                                                    else{
+                                                        if(data.charAt(0)=='g'){
+                                                            Toast.makeText(getApplicationContext(), "Nova senha gravada", Toast.LENGTH_LONG).show();
+                                                            falar("Senha gravada");
+                                                        }else{
+                                                            if(data.charAt(0)=='a'){
+                                                                Toast.makeText(getApplicationContext(), "Abrindo a porta", Toast.LENGTH_LONG).show();
+                                                                falar("Abrindo a porta");
+                                                            }else{
+                                                                if(data.charAt(0)=='f'){
+                                                                    Toast.makeText(getApplicationContext(), "Fechando a porta", Toast.LENGTH_LONG).show();
+                                                                    falar("Fechando a porta");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    readBuffer[readBufferPosition++] = b;
+                                }
+                            }
+                        }
+                    }
+                    catch (IOException ex)
+                    {
+                        stopWorker = true;
+                    }
+                }
+            }
+        });
+
+        workerThread.start();
+    }
+    void closeBT() throws IOException
+    {
+        stopWorker = true;
+        outputStream.close();
+        mmInputStream.close();
+        socket.close();
+        //myLabel.setText("Bluetooth Closed");
+    }
+    void falar(String fala){
+        if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+            Toast.makeText(MainActivity.this,"Problema na inicialização da Linguagem",Toast.LENGTH_LONG).show();
+            if(result==TextToSpeech.LANG_NOT_SUPPORTED){
+                Toast.makeText(MainActivity.this,"Lingua não suportada      ",Toast.LENGTH_LONG).show();}
+
+        }
+        else{
+            tts.speak(fala,TextToSpeech.QUEUE_ADD,null);
+        }
+    }
 }
