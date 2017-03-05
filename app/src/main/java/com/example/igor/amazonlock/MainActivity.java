@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     int readBufferPosition;
     TextToSpeech tts;
     int result;
+    final int MY_DATA_CHECK_CODE =555;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -389,16 +390,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        tts= new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int i) {
-                if(i== TextToSpeech.SUCCESS){
-                    result = tts.setLanguage(Locale.getDefault());
-                }else{
-                    Toast.makeText(MainActivity.this,"Seu dispositivo não suporta a fala",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
 
         btn0.getBackground().setAlpha(0);
         btn1.getBackground().setAlpha(0);
@@ -410,6 +402,9 @@ public class MainActivity extends AppCompatActivity {
         btn7.getBackground().setAlpha(0);
         btn8.getBackground().setAlpha(0);
         btn9.getBackground().setAlpha(0);
+        Intent checkIntent = new Intent();
+        checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkIntent, MY_DATA_CHECK_CODE);
 
     }
        /* public Handler mHandler = new Handler() {
@@ -501,6 +496,30 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Conexão não estabelecida", Toast.LENGTH_LONG).show();
 
+                }
+                break;
+            case MY_DATA_CHECK_CODE:
+                if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                    // success, create the TTS instance
+                    tts =new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
+                        @Override
+                        public void onInit(int i) {
+                            if(i== TextToSpeech.SUCCESS){
+                                result = tts.setLanguage(Locale.getDefault());
+                                if(result==1){
+                                Toast.makeText(MainActivity.this,"Função de voz inicializada",Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                Toast.makeText(MainActivity.this,"Seu dispositivo não suporta a fala",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    // missing data, install it
+                    Intent installIntent = new Intent();
+                    installIntent.setAction(
+                            TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                    startActivity(installIntent);
                 }
         }
     }
@@ -602,11 +621,8 @@ public class MainActivity extends AppCompatActivity {
         //myLabel.setText("Bluetooth Closed");
     }
     void falar(String fala){
-        if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
-            Toast.makeText(MainActivity.this,"Problema na inicialização da Linguagem",Toast.LENGTH_LONG).show();
-            if(result==TextToSpeech.LANG_NOT_SUPPORTED){
-                Toast.makeText(MainActivity.this,"Lingua não suportada      ",Toast.LENGTH_LONG).show();}
-
+        if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            Toast.makeText(MainActivity.this, "Problema na inicialização da Linguagem", Toast.LENGTH_LONG).show();
         }
         else{
             tts.speak(fala,TextToSpeech.QUEUE_ADD,null);
